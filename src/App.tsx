@@ -1,9 +1,7 @@
+import { MainPageContainer } from './pages/MainPage/MainPage.container';
+
 function App() {
-  return (
-    <div className="text-lg">
-      Technical assessment
-    </div>
-  )
+  return <MainPageContainer />;
 }
 
-export default App
+export default App;
