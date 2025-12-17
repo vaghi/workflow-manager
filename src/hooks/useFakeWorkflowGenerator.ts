@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import AirOps from '@airops/airops-js';
 import { Workflow } from '../types';
 import { useWorkflowStore } from '../store/useWorkflowStore';
+import { MOCK_WORKFLOWS } from '../mocks/workflows';
 
 const WORKFLOW_ID = import.meta.env.VITE_AIROPS_WORKFLOW_ID;
 
@@ -30,16 +31,19 @@ export function useFakeWorkflowGenerator(): UseFakeWorkflowGeneratorReturn {
     setError(null);
 
     try {
+      if (import.meta.env.VITE_USE_MOCK_DATA === 'true') {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        setWorkflows(MOCK_WORKFLOWS);
+        setStatus('success');
+        return;
+      }
+
       // Initialize AirOps SDK
       // Note: For public apps client-side, we interpret the docs as needing no auth or specific public identifying.
       const airopsInstance = new AirOps();
 
       const response = await airopsInstance.apps.execute({
         appId: WORKFLOW_ID,
-        tags: [
-          { label: 'Test' },
-          { label: 'Content Creation' }
-        ],
         payload: {
           inputs: inputs,
         },

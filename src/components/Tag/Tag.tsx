@@ -1,6 +1,7 @@
 import React from 'react';
 import { PlusIcon } from '../../assets/PlusIcon';
 import { TagData } from '../../types';
+import { TAG_COLORS } from '../../constants/formOptions';
 
 interface TagProps {
   tags?: TagData[];
@@ -22,7 +23,7 @@ export const Tag: React.FC<TagProps> = ({ tags, isEmpty }) => {
   const isMultiple = tags.length > 1;
   const label = isMultiple ? `${tags.length} tags` : tags[0].label;
   // If multiple, show all dots. If single, show single dot.
-  const colors = tags.map(t => t.color);
+  const colors = tags.map(t => t.color || TAG_COLORS[t.label]);
 
   return (
     <div className="flex w-fit items-center h-[30px] gap-[8px] px-[10px] py-[5px] rounded-[38px] border border-[#09090B14]">
@@ -31,7 +32,7 @@ export const Tag: React.FC<TagProps> = ({ tags, isEmpty }) => {
           <div
             key={index}
             className="w-[8px] h-[8px] rounded-[2px]"
-            style={{ backgroundColor: color, border: `1px solid ${color}` }}
+            style={{ backgroundColor: color || '#ccc', border: `1px solid ${color || '#ccc'}` }}
           />
         ))}
       </div>

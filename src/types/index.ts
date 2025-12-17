@@ -7,6 +7,8 @@ export interface Workflow {
     icon: string;
 }
 
+
 export interface TagData {
   label: string;
+  color?: string;
 }

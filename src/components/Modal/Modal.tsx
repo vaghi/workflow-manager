@@ -10,14 +10,31 @@ interface ModalProps {
 }
 
 export const Modal: React.FC<ModalProps> = React.memo(({ isOpen, onClose, title, children }) => {
+    const [isVisible, setIsVisible] = React.useState(false);
+    const [isMounted, setIsMounted] = React.useState(false);
+
     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
             if (e.key === 'Escape') onClose();
         };
 
         if (isOpen) {
+            setIsMounted(true);
+            // Slight delay to allow render with opacity-0 before switching to opacity-100
+            requestAnimationFrame(() => {
+                setIsVisible(true);
+            });
             document.addEventListener('keydown', handleEscape);
             document.body.style.overflow = 'hidden';
+        } else {
+            setIsVisible(false);
+            // Wait for animation to finish before unmounting
+            const timer = setTimeout(() => setIsMounted(false), 300);
+            return () => {
+                clearTimeout(timer);
+                document.removeEventListener('keydown', handleEscape);
+                document.body.style.overflow = 'unset';
+            };
         }
 
         return () => {
@@ -26,12 +43,15 @@ export const Modal: React.FC<ModalProps> = React.memo(({ isOpen, onClose, title,
         };
     }, [isOpen, onClose]);
 
-    if (!isOpen) return null;
+    if (!isOpen && !isMounted) return null;
 
     return createPortal(
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={onClose}>
+        <div
+            className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+            onClick={onClose}
+        >
             <div
-                className="w-[500px] bg-white rounded-lg shadow-xl overflow-hidden animate-In"
+                className={`w-[500px] bg-white rounded-lg shadow-xl overflow-hidden transform transition-all duration-300 ease-in-out ${isVisible ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'}`}
                 onClick={e => e.stopPropagation()}
             >
                 <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
