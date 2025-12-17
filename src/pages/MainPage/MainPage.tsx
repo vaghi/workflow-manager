@@ -17,6 +17,7 @@ interface MainPageProps {
   onEditClick: (workflow: Workflow) => void;
   isModalOpen: boolean;
   onCloseModal: () => void;
+  onModalExited?: () => void;
   onSave: (data: Partial<Workflow>) => void;
   editingWorkflow: Workflow | null;
 
@@ -37,6 +38,7 @@ export const MainPage: React.FC<MainPageProps> = React.memo(({
   onEditClick,
   isModalOpen,
   onCloseModal,
+  onModalExited,
   onSave,
   editingWorkflow,
   onDeleteClick,
@@ -68,6 +70,7 @@ export const MainPage: React.FC<MainPageProps> = React.memo(({
       <Modal
         isOpen={isModalOpen}
         onClose={onCloseModal}
+        onAnimationComplete={onModalExited}
         title={editingWorkflow ? 'Edit Workflow' : 'Create Workflow'}
       >
         <WorkflowFormContainer

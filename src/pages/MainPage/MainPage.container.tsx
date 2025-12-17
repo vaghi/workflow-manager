@@ -53,13 +53,16 @@ export const MainPageContainer = () => {
 
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
+  }, []);
+
+  const handleModalExited = useCallback(() => {
     setEditingWorkflow(null);
   }, []);
 
   const handleSave = useCallback((data: Partial<Workflow>) => {
     if (editingWorkflow) {
       // Update
-      updateWorkflow({ ...editingWorkflow, ...data } as Workflow);
+      updateWorkflow({ ...editingWorkflow, ...data, lastUpdated: new Date().toISOString() } as Workflow);
     } else {
       // Create
       const newWorkflow: Workflow = {
@@ -67,7 +70,7 @@ export const MainPageContainer = () => {
         type: data.type || 'Workflow',
         name: data.name || 'New Workflow',
         tags: [],
-        lastUpdated: 'Just now', // Mock time
+        lastUpdated: new Date().toISOString(),
         icon: 'document', // Default icon
         ...data
       } as Workflow;
@@ -141,6 +144,7 @@ export const MainPageContainer = () => {
       onEditClick={handleEditClick}
       isModalOpen={isModalOpen}
       onCloseModal={handleCloseModal}
+      onModalExited={handleModalExited}
       onSave={handleSave}
       editingWorkflow={editingWorkflow}
       onDeleteClick={handleDeleteClick}

@@ -13,6 +13,16 @@ interface WorkflowTableProps {
   isLoading?: boolean;
 }
 
+import { formatTimeAgo } from '../../utils/dateUtils';
+
+interface WorkflowTableProps {
+  data: Workflow[];
+  onEditClick: (workflow: Workflow) => void;
+  onDeleteClick: (workflow: Workflow) => void;
+  onUpdateWorkflow: (workflow: Workflow) => void;
+  isLoading?: boolean;
+}
+
 export const WorkflowTable: React.FC<WorkflowTableProps> = React.memo(({ data, onEditClick, onDeleteClick, onUpdateWorkflow, isLoading }) => {
   const isEmpty = data.length === 0;
 
@@ -69,7 +79,7 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = React.memo(({ data, o
 
               {/* Last Updated */}
               <div className="w-[140px] font-sans font-normal text-13 leading-[20px] text-text-tertiary shrink-0">
-                {workflow.lastUpdated}
+                {formatTimeAgo(workflow.lastUpdated)}
               </div>
               {/* Actions */}
               <div className="w-[88px] h-[64px] flex items-center gap-2 py-4 shrink-0">

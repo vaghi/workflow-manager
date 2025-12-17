@@ -7,9 +7,10 @@ interface ModalProps {
     onClose: () => void;
     title: string;
     children: React.ReactNode;
+    onAnimationComplete?: () => void;
 }
 
-export const Modal: React.FC<ModalProps> = React.memo(({ isOpen, onClose, title, children }) => {
+export const Modal: React.FC<ModalProps> = React.memo(({ isOpen, onClose, title, children, onAnimationComplete }) => {
     const [isVisible, setIsVisible] = React.useState(false);
     const [isMounted, setIsMounted] = React.useState(false);
 
@@ -29,7 +30,10 @@ export const Modal: React.FC<ModalProps> = React.memo(({ isOpen, onClose, title,
         } else {
             setIsVisible(false);
             // Wait for animation to finish before unmounting
-            const timer = setTimeout(() => setIsMounted(false), 300);
+            const timer = setTimeout(() => {
+                setIsMounted(false);
+                if (onAnimationComplete) onAnimationComplete();
+            }, 300);
             return () => {
                 clearTimeout(timer);
                 document.removeEventListener('keydown', handleEscape);
