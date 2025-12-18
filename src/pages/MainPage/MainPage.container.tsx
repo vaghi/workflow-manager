@@ -151,7 +151,7 @@ export const MainPageContainer = () => {
       workflowToDelete={workflowToDelete}
       onConfirmDelete={handleConfirmDelete}
       onCancelDelete={handleCancelDelete}
-      onUpdateWorkflow={updateWorkflow}
+      onUpdateWorkflow={(workflow) => updateWorkflow({ ...workflow, lastUpdated: new Date().toISOString() })}
       isLoading={isLoading}
     />
   );
